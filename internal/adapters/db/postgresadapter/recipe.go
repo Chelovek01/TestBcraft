@@ -1,6 +1,7 @@
 package postgresadapter
 
 import (
+	"TestBcraft/internal/controllers/dto"
 	"TestBcraft/internal/domain/entity"
 	"TestBcraft/pkg/logger"
 	"context"
@@ -36,8 +37,11 @@ func (rs *recipeStorage) Create(recipe *entity.Recipe) error {
 func (rs *recipeStorage) GetOne(id string) *entity.Recipe {
 	return nil
 }
-func (rs *recipeStorage) Update(id string) *entity.Recipe {
-	return nil
+func (rs *recipeStorage) Update(recipeDTO *dto.UpdateRecipeDTO) error {
+
+	_, err := rs.db.Exec(context.Background(), "update ")
+
+	return err
 }
 func (rs *recipeStorage) Delete(recipe *entity.Recipe) error {
 	_, err := rs.db.Exec(context.Background(), "delete from recipe where id=$1", recipe.ID)

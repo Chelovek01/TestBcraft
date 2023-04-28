@@ -1,4 +1,4 @@
-package entity
+package dto
 
 type Recipe struct {
 	ID           int    `json:"id"`
@@ -6,4 +6,9 @@ type Recipe struct {
 	Description  string `json:"description"`
 	Ingredients  string `json:"ingredients"`
 	PrepareSteps string `json:"prepare_steps"`
+}
+
+type CreateRecipeDTO struct {
+	Action string `json:"action"`
+	Recipe Recipe `json:"recipe"`
 }

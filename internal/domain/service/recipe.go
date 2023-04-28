@@ -1,6 +1,7 @@
 package service
 
 import (
+	"TestBcraft/internal/controllers/dto"
 	"TestBcraft/internal/domain/entity"
 	"TestBcraft/pkg/logger"
 	"context"
@@ -9,7 +10,7 @@ import (
 type RecipeStorage interface {
 	Create(recipe *entity.Recipe) error
 	GetOne(id string) *entity.Recipe
-	Update(id string) *entity.Recipe
+	Update(recipeDTO *dto.UpdateRecipeDTO) error
 	Delete(recipe *entity.Recipe) error
 	GetALL(manyID []string) []*entity.Recipe
 }

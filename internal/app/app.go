@@ -34,6 +34,8 @@ func RunApp() {
 		handlers.DeleteRecipe(c, pgclient)
 	})
 
+	r.POST("/update_recipe", func(c *gin.Context) {
+	})
 	r.Run()
 
 }
