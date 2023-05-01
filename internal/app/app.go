@@ -35,7 +35,17 @@ func RunApp() {
 	})
 
 	r.POST("/update_recipe", func(c *gin.Context) {
+		handlers.UpdateRecipe(c, pgclient)
 	})
+
+	r.GET("get_one_recipe", func(c *gin.Context) {
+		handlers.GetOneRecipe(c, pgclient)
+	})
+
+	r.GET("/get_all_recipe", func(c *gin.Context) {
+		handlers.GetAllRecipe(c, pgclient)
+	})
+
 	r.Run()
 
 }

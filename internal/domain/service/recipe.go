@@ -1,18 +1,16 @@
 package service
 
 import (
-	"TestBcraft/internal/controllers/dto"
 	"TestBcraft/internal/domain/entity"
 	"TestBcraft/pkg/logger"
-	"context"
 )
 
 type RecipeStorage interface {
 	Create(recipe *entity.Recipe) error
-	GetOne(id string) *entity.Recipe
-	Update(recipeDTO *dto.UpdateRecipeDTO) error
+	GetOne(id int) (*entity.Recipe, error)
+	Update(id int, column string, value string) error
 	Delete(recipe *entity.Recipe) error
-	GetALL(manyID []string) []*entity.Recipe
+	GetALL() ([]*entity.Recipe, error)
 }
 
 type recipeService struct {
@@ -29,12 +27,22 @@ func (r *recipeService) Create(recipe *entity.Recipe) error {
 	}
 	return err
 }
-func (r *recipeService) GetOne(ctx context.Context) entity.Recipe {
-	return entity.Recipe{}
+
+func (r *recipeService) GetOne(id int) (*entity.Recipe, error) {
+	recipe, err := r.storage.GetOne(id)
+
+	return recipe, err
 }
-func (r *recipeService) Update(ctx context.Context) entity.Recipe {
-	return entity.Recipe{}
+
+func (r *recipeService) Update(id int, column string, value string) error {
+	err := r.storage.Update(id, column, value)
+	if err != nil {
+		logger.ErrorLogger.Println(err)
+	}
+
+	return err
 }
+
 func (r *recipeService) Delete(recipe *entity.Recipe) error {
 	err := r.storage.Delete(recipe)
 	if err != nil {
@@ -42,6 +50,10 @@ func (r *recipeService) Delete(recipe *entity.Recipe) error {
 	}
 	return err
 }
-func (r *recipeService) GetAll(ctx context.Context, manyId []string) []*entity.Recipe {
-	return nil
+func (r *recipeService) GetAll() ([]*entity.Recipe, error) {
+	recipe, err := r.storage.GetALL()
+	if err != nil {
+		logger.ErrorLogger.Println(err)
+	}
+	return recipe, err
 }
