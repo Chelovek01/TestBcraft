@@ -46,6 +46,10 @@ func RunApp() {
 		handlers.GetAllRecipe(c, pgclient)
 	})
 
+	r.POST("/register", func(c *gin.Context) {
+		handlers.Register(c, pgclient)
+	})
+
 	r.Run()
 
 }
