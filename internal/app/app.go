@@ -21,7 +21,7 @@ func RunApp() {
 		log.Fatalf("err loading: %v", err)
 	}
 
-	pgclient, err := postgresbd.NewClientPostgres()
+	pgClient, err := postgresbd.NewClientPostgres()
 	if err != nil {
 		logger.ErrorLogger.Println(err)
 	}
@@ -31,19 +31,19 @@ func RunApp() {
 	public := r.Group("/v1")
 
 	public.GET("get_one_recipe", func(c *gin.Context) {
-		v1.GetOneRecipe(c, pgclient)
+		v1.GetOneRecipe(c, pgClient)
 	})
 
 	public.GET("/get_all_recipe", func(c *gin.Context) {
-		v1.GetAllRecipe(c, pgclient)
+		v1.GetAllRecipe(c, pgClient)
 	})
 
 	public.POST("/register", func(c *gin.Context) {
-		v1.Register(c, pgclient)
+		v1.Register(c, pgClient)
 	})
 
 	public.POST("/login", func(c *gin.Context) {
-		err := v1.LoginUser(c, pgclient)
+		err := v1.LoginUser(c, pgClient)
 		if err != nil {
 			logger.ErrorLogger.Println(err)
 		}
@@ -54,21 +54,25 @@ func RunApp() {
 	protected.Use(middlewares.JwtAuthMiddleware())
 
 	protected.POST("/create_recipe", func(c *gin.Context) {
-		v2.CreateRecipe(c, pgclient)
+		v2.CreateRecipe(c, pgClient)
 	})
 
 	protected.POST("/delete_recipe", func(c *gin.Context) {
-		v2.DeleteRecipe(c, pgclient)
+		v2.DeleteRecipe(c, pgClient)
 	})
 
 	protected.POST("/update_recipe", func(c *gin.Context) {
-		v2.UpdateRecipe(c, pgclient)
+		v2.UpdateRecipe(c, pgClient)
 	})
 
 	protected.GET("/user", func(c *gin.Context) {
-		v2.CurrentUser(c, pgclient)
+		v2.CurrentUser(c, pgClient)
 	})
 
-	r.Run()
+	err = r.Run()
+	if err != nil {
+		logger.ErrorLogger.Println(err)
+		return
+	}
 
 }
