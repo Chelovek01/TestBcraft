@@ -6,4 +6,11 @@ create table recipe (
     ingredients text,
     prepare_steps text
 
+);
+
+create table users (
+    id int primary key,
+    username text,
+    password text
+
 )

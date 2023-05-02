@@ -1,4 +1,4 @@
-package handlers
+package v1
 
 import (
 	"TestBcraft/internal/adapters/db/postgresadapter"
@@ -10,11 +10,11 @@ import (
 	"net/http"
 )
 
-func GetOneRecipe(c *gin.Context, p *pgxpool.Pool) {
+func GetAllRecipe(c *gin.Context, p *pgxpool.Pool) {
 
-	var getOne dto.GetOneRecipe
+	var dtoData dto.GetAllRecipe
 
-	err := c.ShouldBindJSON(&getOne)
+	err := c.ShouldBindJSON(dtoData)
 	if err != nil {
 		logger.ErrorLogger.Println(err)
 	}
@@ -23,11 +23,11 @@ func GetOneRecipe(c *gin.Context, p *pgxpool.Pool) {
 
 	serviceRecipe := service.NewRecipeService(storageRecipe)
 
-	resultRecipe, errGetOne := serviceRecipe.GetOne(getOne.ID)
-	if errGetOne != nil {
-		logger.ErrorLogger.Println(errGetOne)
+	result, errGetAll := serviceRecipe.GetAll()
+	if errGetAll != nil {
+		logger.ErrorLogger.Println(errGetAll)
 	}
 
-	c.JSON(http.StatusOK, resultRecipe)
+	c.JSON(http.StatusOK, result)
 
 }

@@ -1,4 +1,4 @@
-package handlers
+package v2
 
 import (
 	"TestBcraft/internal/adapters/db/postgresadapter"

@@ -1,7 +1,9 @@
 package app
 
 import (
-	"TestBcraft/internal/controllers/http/handlers"
+	"TestBcraft/internal/controllers/http/handlers/v1"
+	"TestBcraft/internal/controllers/http/handlers/v2"
+	"TestBcraft/internal/middlewares"
 	"TestBcraft/pkg/logger"
 	"TestBcraft/pkg/postgresbd"
 	"github.com/gin-gonic/gin"
@@ -26,28 +28,45 @@ func RunApp() {
 
 	r := gin.Default()
 
-	r.POST("/create_recipe", func(c *gin.Context) {
-		handlers.CreateRecipe(c, pgclient)
+	public := r.Group("/v1")
+
+	public.GET("get_one_recipe", func(c *gin.Context) {
+		v1.GetOneRecipe(c, pgclient)
 	})
 
-	r.POST("/delete_recipe", func(c *gin.Context) {
-		handlers.DeleteRecipe(c, pgclient)
+	public.GET("/get_all_recipe", func(c *gin.Context) {
+		v1.GetAllRecipe(c, pgclient)
 	})
 
-	r.POST("/update_recipe", func(c *gin.Context) {
-		handlers.UpdateRecipe(c, pgclient)
+	public.POST("/register", func(c *gin.Context) {
+		v1.Register(c, pgclient)
 	})
 
-	r.GET("get_one_recipe", func(c *gin.Context) {
-		handlers.GetOneRecipe(c, pgclient)
+	public.POST("/login", func(c *gin.Context) {
+		err := v1.LoginUser(c, pgclient)
+		if err != nil {
+			logger.ErrorLogger.Println(err)
+		}
 	})
 
-	r.GET("/get_all_recipe", func(c *gin.Context) {
-		handlers.GetAllRecipe(c, pgclient)
+	protected := r.Group("v2")
+
+	protected.Use(middlewares.JwtAuthMiddleware())
+
+	protected.POST("/create_recipe", func(c *gin.Context) {
+		v2.CreateRecipe(c, pgclient)
 	})
 
-	r.POST("/register", func(c *gin.Context) {
-		handlers.Register(c, pgclient)
+	protected.POST("/delete_recipe", func(c *gin.Context) {
+		v2.DeleteRecipe(c, pgclient)
+	})
+
+	protected.POST("/update_recipe", func(c *gin.Context) {
+		v2.UpdateRecipe(c, pgclient)
+	})
+
+	protected.GET("/user", func(c *gin.Context) {
+		v2.CurrentUser(c, pgclient)
 	})
 
 	r.Run()
